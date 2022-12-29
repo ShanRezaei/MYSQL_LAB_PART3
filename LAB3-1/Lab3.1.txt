@@ -1,0 +1,152 @@
+1. STORE PROCEDURE: fetch_animal_parents
+	IN: animal id
+	Display if both parents exist -> show parent's name (both mom and dad)
+	Else if only one of the parent exist -> show their name
+	Else show -> No parents
+
+
+CREATE PROCEDURE fetch_animal_parents1(IN a_id INT)
+BEGIN
+  DECLARE mother_name VARCHAR(50);
+  DECLARE father_name VARCHAR(50);
+  DECLARE child_name VARCHAR(50); 
+  DECLARE mother_id INT;
+  DECLARE father_id INT;
+  
+    
+    #get the animal info
+    SELECT child.name ,father.name , mother.name  INTO child_name, father_name, mother_name
+    FROM animal child 
+    JOIN animal father ON father.id = child.father_id 
+    JOIN animal mother ON mother.id = child.mother_id
+    WHERE child.id = a_id;
+    
+    #conditions
+    IF mother_name IS NOT NULL AND father_name IS NOT NULL  THEN
+    SELECT CONCAT_WS('|', mother_name,father_name) AS Result; 
+  ELSEIF mother_name IS NOT NULL AND father_name IS  NULL  THEN
+    SELECT mother_name AS MOTHER; 
+  ELSEIF mother_name IS  NULL AND father_name IS  NOT NULL  THEN
+    SELECT father_name AS FATHER; 
+  ELSE
+    SELECT CONCAT(child_name, "does not have any parents") AS Result; 
+  END IF;
+END;
+
+
+
+
+
+
+
+
+
+2. STORE PROCEDURE: fetch_animal_group_of_age
+	IN: animal id
+	Display: Animal group of age
+	CASE: 'age'
+		1. 2006-2007 -> Group 1
+		2. 2007-2008 -> Group 2
+		3. 2008-2009 -> Group 3
+		4. 2009-2010 -> Group 4
+		5. 2010-2011 -> Group 5
+		6. 2011-2012 -> Group 6
+		7. 2012-2013 -> Group 7
+		8. 2014-2015 -> Group 8
+		9. 2015-2016 -> Group 9
+		10. 2016-2017 -> Group 10
+		11. 2017-2018 -> Group 11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. Regular Query: Using an "If" statement in the select, display the following sentence for each animal based on their gender:
+-*name of animal is a sexy Female (for females)
+-*name of animal is a macho Male (for males)
+-*name of animal gender is to be decided (for null)
+
+4. 3. Regular Query: Using a "Case" statement in the select, display the following sentence for each animal based on their gender:
+-*name of animal is a sexy Female (for females)
+-*name of animal is a macho Male (for males)
+-*name of animal gender is to be decided (for nulls)
+
+5. STORE PROCEDURE: fetch_animal_info
+	IN: animal id
+	Display the animal name, gender, dob and race.
+		-if animal doesn't have a name display: "No name"
+		-if animal doesn't have a gender display: "To Be decided"
+		-if animal doesn't have a race display: "Unknown"
+
+DELIMITER $$
+CREATE PROCEDURE fetch_animal_info10(IN a_id INT)
+BEGIN
+  DECLARE var_sex VARCHAR(50);
+  DECLARE var_race_id VARCHAR(50);
+  DECLARE var_name VARCHAR(50); 
+  DECLARE var_dob INT;
+  
+  
+    
+    #get the animal info
+    SELECT name ,sex , YEAR(dob) , race_id  INTO var_name, var_sex, var_dob,var_race_id
+    FROM animal 
+    WHERE id = a_id;
+    
+    #conditions
+    IF var_name IS NULL AND var_sex IS NULL AND var_race_id IS NULL THEN
+		SET var_name = 'no name';
+        SET var_sex = 'to be decided';
+        SET var_race_id = 'unknown';
+        
+	# name and sex
+	ELSEIF var_name IS NULL AND var_sex IS NULL THEN
+		SET var_name = 'no name';
+		SET var_sex = 'to be decided';
+	
+    # name and race
+	ELSEIF var_name IS NULL AND var_race_id  IS NULL THEN
+		SET var_name = 'no name';
+		SET var_race_id = 'unknown';
+	
+    # sex and race
+	ELSEIF var_race_id IS NULL AND var_sex IS NULL THEN
+		SET var_race_id = 'unknown';
+		SET var_sex = 'to be decided';
+	
+    # name
+	ELSEIF var_name IS NULL THEN
+		SET var_name = 'no name';
+	
+    # sex
+    ELSEIF var_sex IS NULL THEN
+		SET var_sex = 'to be decided';
+	
+    # race
+	ELSEIF var_race_id IS NULL THEN
+		SET var_race_id = 'unknown';
+	END IF;
+    
+    SELECT var_name 'name', var_sex 'sex', var_dob 'dob', var_race_id 'race';
+END $$
+DELIMITER ;
+
+
+CALL fetch_animal_info6(10);
+
+
+
+
+
+
+

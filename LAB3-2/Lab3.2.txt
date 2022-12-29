@@ -1,0 +1,129 @@
+1. STORE PROCEDURE: count_backwards
+	IN: Number to start from (x)
+	IN: Number to go to (Y)
+	Display all the numbers (inclusive) from x to y as one comma separated value
+	Ex: x = 10, y = 5, Display: 10,9,8,7,6,5
+
+2. STORE PROCEDURE: count_funny
+	IN: Number to start from (x)
+	IN: Number to go to (Y)
+	Display all the numbers (inclusive) from x to y and a special message for any number divisible by 5
+	Ex: x = 10, y = 0
+	Display: 	10 <- funny
+				9
+				8
+				7
+				6
+				5 <- funny
+				4
+				3
+				2
+				1
+				0 <- funny
+
+3. STORE PROCEDURE: Every_two_days
+	IN: Number of days
+	OUT: Every two days from now up to the number of days
+	Hint: While or Repete
+
+4. STORE PROCEDURE: Say_ma_name
+	IN: Animal id
+	OUT: Animal's name as much as it's age.
+	ex: I'm 3 -> George, George, George
+
+5. STORE PROCEDURE: my_birthday
+	IN: your birthday (DATE)
+	Display all the dates between Jan 1 - Dec 31 of this year in a loop.
+	Stop the loop on your birthday (the variable entered)
+
+	Ex: 2017-01-01
+		2017-01-02
+		2017-01-03
+		2017-01-04
+		2017-01-05 <- My Birthday :D
+
+DELIMITER |
+CREATE PROCEDURE my_birthday4(IN dateStart DATE, IN dateEnd DATE)
+BEGIN
+declare bd datetime;
+    CREATE TEMPORARY TABLE IF NOT EXISTS date_range (day DATE);
+   
+    WHILE dateStart <= dateEnd DO
+      INSERT INTO date_range VALUES (dateStart);
+      SET dateStart = DATE_ADD(dateStart, INTERVAL 1 DAY);
+    END WHILE;
+
+    SELECT * FROM date_range;
+  
+   
+    
+
+END|
+DELIMITER ;
+
+
+call my_birthday4('2019-01-01 00:00:00', '2019-10-21 00:00:00');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER |
+
+CREATE PROCEDURE my_birthday(IN your_birthday DATE)
+BEGIN
+  
+  DECLARE output VARCHAR(100); 
+  DECLARE i INT;
+  DECLARE date_diff  INT;
+  DECLARE output_1  DATE;
+
+  SET date_diff = DATEDIFF("your_birthday", "1988-01-01");
+
+    WHILE i < date_diff  DO 
+    SET output_1 =DATE_ADD("1988-01-01", INTERVAL i DAY);
+    SET output = CONCAT_WS(",",output_1,output); 
+    SET i = i + 1; 
+
+    END WHILE; 
+
+     
+
+    SELECT output AS Result; 
+
+END | 
+
+DELIMITER ; 
+
+  
+    
+    
+    
